@@ -27,12 +27,25 @@ const client = new MongoClient(uri, {
 
 async function run() {
     
+    const watchListCollection = client.db('gamerDB').collection('watchList');
     const gamerCollection = client.db('gamerDB').collection('gamer');
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+  // watchList
+     app.get('/watchList',async(req,res)=>{
+      const email = req.query.email;
+      const result = await watchListCollection.find({email}).toArray();
+      res.send(result);
+     })
 
-
+         // delete method for watchList
+    app.delete('/watchList/:id',async(req,res)=>{
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await watchListCollection.deleteOne(query);
+      res.send(result);
+    })
     // id dhore data pawyar jonno 
     app.get('/gamers/:id',async(req,res)=>{
       const id = req.params.id;
@@ -47,6 +60,19 @@ async function run() {
         const result= await cursor.toArray();
         res.send(result);
     })
+    app.delete('/gamer/:id',async(req,res)=>{
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await watchListCollection.deleteOne(query);
+      res.send(result);
+    })
+
+    // for watchList
+    app.post ('/watchList',async(req,res)=>{
+      const watchItem = req.body;
+      const result = await watchListCollection.insertOne(watchItem);
+      res.send(result);
+    })
 // data create are jonno 
     app.post('/gamers',async(req,res)=>{
         const newGamer = req.body;
@@ -54,6 +80,7 @@ async function run() {
         const result = await gamerCollection.insertOne(newGamer);
         res.send(result)
     })
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
