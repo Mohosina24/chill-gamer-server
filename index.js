@@ -60,10 +60,31 @@ async function run() {
         const result= await cursor.toArray();
         res.send(result);
     })
-    app.delete('/gamer/:id',async(req,res)=>{
+
+    // update for gamer
+    app.put('/gamers/:id', async(req,res)=>{
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)}
+      const option ={upsert:true};
+      const updateGame = req.body;
+      const game = {
+          $set:{
+            photo:updateGame.photo,
+            title:updateGame.title,
+            description:updateGame.description,
+            rating:updateGame.rating,
+            year:updateGame.year,
+            genre:updateGame.genre
+          }
+            
+      }
+      const result = await gamerCollection.updateOne(filter,game,option);
+      res.send(result)
+    })
+    app.delete('/gamers/:id',async(req,res)=>{
       const id = req.params.id;
       const query = {_id: new ObjectId(id)}
-      const result = await watchListCollection.deleteOne(query);
+      const result = await gamerCollection.deleteOne(query);
       res.send(result);
     })
 
