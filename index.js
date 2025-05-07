@@ -1,8 +1,9 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
-require('dotenv').config();
+
 const port = process.env.PORT || 5000;
 
 // middleware
@@ -56,6 +57,7 @@ async function run() {
     
 // sob data pawyar jonno 
     app.get('/gamers',async(req,res)=>{
+      
         const cursor = gamerCollection.find();
         const result= await cursor.toArray();
         res.send(result);
